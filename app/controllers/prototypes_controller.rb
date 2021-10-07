@@ -1,4 +1,6 @@
 class PrototypesController < ApplicationController
+  before_action :authenticate_user!, only: [:index, :show]
+  before_action :without_edit, except: [:edit]
 
   def index
     @prototypes = Prototype.all
@@ -13,12 +15,14 @@ class PrototypesController < ApplicationController
     if @prototype.save
       redirect_to root_path
     else
-        render 'new'
+        render :new
     end
   end
 
   def show
     @prototype = Prototype.find(params[:id])
+    @comment = Comment.new
+    @comments = @prototype.comments.includes(:user)
   end
   
   def edit
@@ -27,9 +31,8 @@ class PrototypesController < ApplicationController
 
   def update
     @prototype = Prototype.find(params[:id])
-    @prototype.update(prototype_params)
-    if current_user.update(params[:id])
-      redirect_to prototype_path(prototype.id)
+    if @prototype.update(prototype_params)
+      redirect_to prototype_path(@prototype.id)
     else
         render :edit
     end
@@ -37,11 +40,16 @@ class PrototypesController < ApplicationController
 
   def destroy
     @prototype = Prototype.find(params[:id])
-    @prototype.destroy
-    if prototype.destroy(params[:id])
+    if @prototype.destroy
       redirect_to root_path
     else
         render :edit
+    end
+
+    def without_edit
+      unless user_signed_in?
+        redirect_to root_path
+      end
     end
   end
 

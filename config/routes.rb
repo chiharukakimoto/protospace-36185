@@ -4,8 +4,8 @@ Rails.application.routes.draw do
   get 'prototypes/new'
 
   root to: "prototypes#index" 
-  resources :users
+  resources :users, only: :show
   resources :prototypes do
-    resources :comments, only: [:index, :create]
+    resources :comments, only: :create
   end
 end
