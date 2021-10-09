@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class DeviseCreateUsers < ActiveRecord::Migration[6.0]
-  has_many :prototypes
   def change
     create_table :users do |t|
       ## Database authenticatable

@@ -1,6 +1,4 @@
 class CreatePrototypes < ActiveRecord::Migration[6.0]
-  belongs_to :user
-  has_one_attached :image
   def change
     create_table :prototypes do |t|
       t.string :title
